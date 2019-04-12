@@ -25,6 +25,7 @@ const developmentFormat = format.combine(
 );
 
 const productionFormat = format.combine(
+  format.colorize(),
   format.timestamp(),
   format.align(),
   format.printf(formatParams)

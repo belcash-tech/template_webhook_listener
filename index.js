@@ -2,35 +2,39 @@ var PORT = 9178
 var express = require('express')
 var bodyParser = require('body-parser')
 var Logger = require('./logger')
+var jc = require('json-cycle')
 var app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 // app.use(bodyParser.json({ type: 'application/*+json' }))
+app.disable('x-powered-by')
+const allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', '*')
+  res.header('Access-Control-Allow-Headers', '*')
+  res.setHeader('X-Content-Type-Options', 'no-sniff')
+  res.setHeader('X-XSS-Protection', 1)
+  res.setHeader('X-Frame-Options', 'Deny')
+  res.setHeader('X-Application-Category', 'WebHookListener')
+  next();
+}
 
-app.get("/",function(req,res){
-  res.statusCode=200
-  res.send("{ message: 'Listening well ...'}")
-})
-app.get("/webhook",function(req,res){
-  var request_body = req.body ? req.body : req.query
-  console.log("\nPayload\n",request_body);
-  res.statusCode=200
-  res.send("{message: 'ACKNOWLEDGED',status: 200}")
-})
+app.use(allowCrossDomain)
 
-app.post("/webhook",function(req,res){
-  var request_body = req.body ? req.body : req.query
-  console.log("\nPayload\n",request_body);
-  res.statusCode=200
-  res.send("{message: 'ACKNOWLEDGED',status: 200}")
-})
-
-app.put("/webhook",function(req,res){
-  var request_body = req.body ? req.body : req.query
-  console.log("\nPayload\n",request_body)
-  res.statusCode=200
-  res.send("{message: 'ACKNOWLEDGED',status: 200}")
+app.all('/webhook/:entity', (req, res) => {
+  var status =JSON.stringify({
+    params: req.params,
+    method: req.method,
+    query: req.query,
+    body: req.body,
+    headers: req.headers
+  })
+  console.log(`\n-------------------TIME : ${(new Date()).toISOString().slice(0,19)}-------------------------------------\n`)
+  console.log(JSON.parse(status))
+  Logger.debug(status)
+  res.status(200).json({ message: 'Received'})
 })
 app.listen(PORT,function(){
-  console.log("Listening on PORT: ",PORT)
+  Logger.debug(`Server listening on PORT : ${PORT}`)
+  console.log(`Server listening on PORT : ${PORT}`)
 })
