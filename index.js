@@ -1,4 +1,5 @@
-var PORT = 9178
+var PORT = 5000
+var path = require('path')
 var express = require('express')
 var bodyParser = require('body-parser')
 var Logger = require('./logger')
@@ -20,7 +21,7 @@ const allowCrossDomain = function(req, res, next) {
 }
 
 app.use(allowCrossDomain)
-
+app.use(express.static({ root: path.resolve('./public')}))
 app.all('/webhook/:entity', (req, res) => {
   var status =JSON.stringify({
     params: req.params,
