@@ -1,4 +1,4 @@
-var PORT = 5000
+var PORT = process.env.PORT || 5000
 var path = require('path')
 var express = require('express')
 var bodyParser = require('body-parser')
