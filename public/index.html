@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <title>Data stream</title>
+</head>
+<body>
+<pre><code class="JSON" id="dataStream"></code></pre>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script type="text/javascript">
+  var dataHolder = document.getElementById('dataStream');
+  var URI =window.location.hostname+(window.location.port==""? "" : ":"+window.location.port+window.location.pathname);
+  URL = URI;
+  //var template = {'<>':'div','html':'${params} ${method}': '${query}' : '${body}': '${headers}'};
+  var socket = io.connect(URL,{
+    reconnection: true,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax : 5000,
+    reconnectionAttempts: Infinity
+  });
+  socket.on('data',(data) => {
+    delete data.headers
+    console.log(JSON.stringify(data));
+    var pannel=document.createElement('div');
+    pannel.setAttribute('class', 'card card-alert alert-success');
+    pannel.setAttribute('width', '400');
+    pannel.setAttribute('height', '400');
+    pannel.setAttribute('style', 'margin: 1em;');
+    pannel.innerHTML=JSON.stringify(data);
+    //dataHolder.innerHTML=JSON.stringify(data)
+    dataHolder.appendChild(pannel);
+  })
+  document.addEventListener('DOMContentLoaded', (event) => {
+    document.querySelectorAll('pre code').forEach((block) => {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+</body>
+</html>
