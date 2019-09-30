@@ -1,2 +1,5 @@
 node_modules
 locals
+logs/*.*
+logs/.*.json
+
