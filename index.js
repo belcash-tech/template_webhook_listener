@@ -27,6 +27,13 @@ app.use(express.static(path.resolve('./public/')))
 app.get('/',(req, res) => {
   res.sendFile('index.html')
 })
+app.get('/notifications/:entity', async (req, res) => {
+  let entity = req.params.entity
+  res.status(200).json({
+    entity: entity
+  })
+  console.log(entity)
+})
 app.all('/webhook/:entity', (req, res) => {
   var status =JSON.stringify({
     params: req.params,
@@ -35,6 +42,8 @@ app.all('/webhook/:entity', (req, res) => {
     body: req.body,
     headers: req.headers
   })
+  console.log(req.headers)
+  console.log("Headers: ", JSON.stringify(req.headers))
   io.sockets.emit('data',JSON.parse(status))
   console.log(`\n-------------------TIME : ${(new Date()).toISOString().slice(0,19)}-------------------------------------\n`)
   console.log(JSON.parse(status))
