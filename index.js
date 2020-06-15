@@ -8,11 +8,14 @@ var app = express()
 var DBLogger = require('./db/data')
 var SocketIO = require('socket.io')
 var server = require('http').Server(app)
+var cors = require('cors')
 var io = SocketIO(server)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 // app.use(bodyParser.json({ type: 'application/*+json' }))
 app.disable('x-powered-by')
+app.use(cors())
+/*
 const allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Methods', '*')
@@ -24,6 +27,7 @@ const allowCrossDomain = function(req, res, next) {
   next();
 }
 app.use(allowCrossDomain)
+*/
 //app.use(express.static(path.resolve('./public/')))
 app.all('/', (req, res) => {
   var status =JSON.stringify({
@@ -37,6 +41,7 @@ app.all('/', (req, res) => {
   DBLogger.saveReport(dbLog).then(d => console.log(d)).catch(e => console.log(e))
   console.log(req.headers)
   console.log("Headers: ", JSON.stringify(req.headers))
+  io.origins('*:*')
   io.sockets.emit('data',JSON.parse(status))
   console.log(`\n-------------------TIME : ${(new Date()).toISOString().slice(0,19)}-------------------------------------\n`)
   console.log(JSON.parse(status))
@@ -62,6 +67,7 @@ app.all('/webhook/:entity', (req, res) => {
   })
   console.log(req.headers)
   console.log("Headers: ", JSON.stringify(req.headers))
+  io.origins('*:*')
   io.sockets.emit('data',JSON.parse(status))
   console.log(`\n-------------------TIME : ${(new Date()).toISOString().slice(0,19)}-------------------------------------\n`)
   console.log(JSON.parse(status))
