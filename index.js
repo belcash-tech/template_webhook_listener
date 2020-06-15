@@ -1,10 +1,11 @@
-var PORT = process.env.PORT || 5000
+var PORT = process.env.PORT || 5544
 var path = require('path')
 var express = require('express')
 var bodyParser = require('body-parser')
 var Logger = require('./logger')
 var jc = require('json-cycle')
 var app = express()
+var DBLogger = require('./db/data')
 var SocketIO = require('socket.io')
 var server = require('http').Server(app)
 var io = SocketIO(server)
@@ -23,10 +24,27 @@ const allowCrossDomain = function(req, res, next) {
   next();
 }
 app.use(allowCrossDomain)
-app.use(express.static(path.resolve('./public/')))
-app.get('/',(req, res) => {
-  res.sendFile('index.html')
+//app.use(express.static(path.resolve('./public/')))
+app.all('/', (req, res) => {
+  var status =JSON.stringify({
+    params: req.params,
+    method: req.method,
+    query: req.query,
+    body: req.body,
+    headers: req.headers
+  }) 
+  let dbLog={request: jc.stringify(req), body: jc.stringify(req.body), query: jc.stringify(req.query)} 
+  DBLogger.saveReport(dbLog).then(d => console.log(d)).catch(e => console.log(e))
+  console.log(req.headers)
+  console.log("Headers: ", JSON.stringify(req.headers))
+  io.sockets.emit('data',JSON.parse(status))
+  console.log(`\n-------------------TIME : ${(new Date()).toISOString().slice(0,19)}-------------------------------------\n`)
+  console.log(JSON.parse(status))
+  Logger.debug(status)
+  
+  res.status(200).json({ message: 'Received'})
 })
+
 app.get('/notifications/:entity', async (req, res) => {
   let entity = req.params.entity
   res.status(200).json({
