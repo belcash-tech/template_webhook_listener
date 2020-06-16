@@ -9,13 +9,15 @@ var DBLogger = require('./db/data')
 var SocketIO = require('socket.io')
 var server = require('http').Server(app)
 var cors = require('cors')
+var helmet = require('helmet')
 var io = SocketIO(server)
+app.use(helmet())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 // app.use(bodyParser.json({ type: 'application/*+json' }))
 app.disable('x-powered-by')
-app.use(cors())
-/*
+//app.use(cors())
+
 const allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
   res.header('Access-Control-Allow-Methods', '*')
@@ -27,25 +29,25 @@ const allowCrossDomain = function(req, res, next) {
   next();
 }
 app.use(allowCrossDomain)
-*/
 //app.use(express.static(path.resolve('./public/')))
 app.all('/', (req, res) => {
-  var status =JSON.stringify({
+  var summary =JSON.stringify({
     params: req.params,
     method: req.method,
     query: req.query,
     body: req.body,
     headers: req.headers
-  }) 
-  let dbLog={request: jc.stringify(req), body: jc.stringify(req.body), query: jc.stringify(req.query)} 
+  })
+  console.log("Server keys: ",Object.keys(app))
+  let dbLog={request: jc.stringify(req), body: jc.stringify(req.body), query: jc.stringify(req.query), summary: summary } 
   DBLogger.saveReport(dbLog).then(d => console.log(d)).catch(e => console.log(e))
   console.log(req.headers)
   console.log("Headers: ", JSON.stringify(req.headers))
   io.origins('*:*')
-  io.sockets.emit('data',JSON.parse(status))
+  io.sockets.emit('data',JSON.parse(summary))
   console.log(`\n-------------------TIME : ${(new Date()).toISOString().slice(0,19)}-------------------------------------\n`)
-  console.log(JSON.parse(status))
-  Logger.debug(status)
+  console.log(JSON.parse(summary))
+  Logger.debug(summary)
   
   res.status(200).json({ message: 'Received'})
 })
