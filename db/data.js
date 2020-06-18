@@ -9,9 +9,9 @@ const pool = new Pool({
  database: config.DB
 })
 var _this = module.exports = {
-   saveReport: async function(log={ request: {},  body: {} , query: {} }) {
+	saveReport: async function(log={ request: {},  body: {} , query: {},summary: {} }) {
       try{
-        let query=`insert into request_log(request_log,request_query, request_body)values('${log.request}','${log.query}','${log.body}') returning *;`
+        let query=`insert into request_log(request_log,request_query, request_body,summary)values('${log.request}','${log.query}','${log.body}', '${log.summary}') returning *;`
 	let result = await pool.query(query);
 	return result.rows;
       }catch(error){
