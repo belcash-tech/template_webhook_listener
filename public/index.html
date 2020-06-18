@@ -15,7 +15,8 @@
         padding: 40px;
       }
     </style>
-    <script src="/socket.io/socket.io.js"></script>
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <link
       rel="stylesheet"
       href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/default.min.css"
@@ -34,7 +35,6 @@
       </div>
       <div class="card-body" id="dataStream">
         <pre><code class="json">
-          {"params":{"entity":"yared"},"method":"PUT","query":{},"body":{"from_account":"00310049462","from_branch":"00003","to_account":"00310568128","to_branch":"00003","amount":50000}}
         </code>
         </pre>
       </div>
@@ -61,7 +61,8 @@
         (window.location.port == ''
           ? ''
           : ':' + window.location.port + window.location.pathname);
-      URL = URI;
+      // URL = URI;
+      URL='https://webhook.helloethio.com'
       //var template = {'<>':'div','html':'${params} ${method}': '${query}' : '${body}': '${headers}'};
       var socket = io.connect(URL, {
         reconnection: true,
