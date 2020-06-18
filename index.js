@@ -38,11 +38,11 @@ app.all('/', (req, res) => {
     body: req.body,
     headers: req.headers
   })
-  console.log("Server keys: ",Object.keys(app))
+  //console.log("Server keys: ",Object.keys(app))
   let dbLog={request: jc.stringify(req), body: jc.stringify(req.body), query: jc.stringify(req.query), summary: summary } 
   DBLogger.saveReport(dbLog).then(d => console.log(d)).catch(e => console.log(e))
-  console.log(req.headers)
-  console.log("Headers: ", JSON.stringify(req.headers))
+  //console.log(req.headers)
+  //console.log("Headers: ", JSON.stringify(req.headers))
   io.origins('*:*')
   io.sockets.emit('data',JSON.parse(summary))
   console.log(`\n-------------------TIME : ${(new Date()).toISOString().slice(0,19)}-------------------------------------\n`)
