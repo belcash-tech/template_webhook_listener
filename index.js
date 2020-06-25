@@ -29,7 +29,10 @@ const allowCrossDomain = function (req, res, next) {
   next();
 };
 app.use(allowCrossDomain);
-//app.use(express.static(path.resolve('./public/')))
+app.use(express.static(path.resolve("./public/")));
+app.get("/", (req, res) => {
+  res.sendFile("index.html");
+});
 app.all("/", (req, res) => {
   var summary = JSON.stringify({
     params: req.params,
