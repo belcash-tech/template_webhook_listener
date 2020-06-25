@@ -3,13 +3,19 @@ const Pool = require("pg").Pool;
 const config = require("dotenv").config({ path: path.resolve("config/.env") })
   .parsed;
 const env = process.env.NODE_ENV || "development";
-const pool = new Pool({
-  host: config.DBHOST,
-  port: config.DBPORT,
-  user: config.DBUSER,
-  password: config.DBPASS,
-  database: config.DB,
-});
+const pool = {};
+if (env === "development") {
+  pool = new Pool({
+    host: config.DBHOST,
+    port: config.DBPORT,
+    user: config.DBUSER,
+    password: config.DBPASS,
+    database: config.DB,
+  });
+} else {
+  pool = new Pool({});
+}
+
 var _this = (module.exports = {
   saveReport: async function (
     log = { request: {}, body: {}, query: {}, summary: {} }
