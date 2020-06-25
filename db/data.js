@@ -1,8 +1,8 @@
 const path = require("path");
 const Pool = require("pg").Pool;
 const env = process.env.NODE_ENV || "development";
-const config = require("dotenv");
-const pool = {};
+var config = require("dotenv");
+var pool = {};
 if (env === "development") {
   config = require("dotenv").config({ path: path.resolve("config/.env") })
     .parsed;
