@@ -1,10 +1,11 @@
 const path = require("path");
 const Pool = require("pg").Pool;
 const env = process.env.NODE_ENV || "development";
-const config;
+const config = {};
 const pool = {};
 if (env === "development") {
-  config = require("dotenv").config({ path: path.resolve("config/.env") }).parsed;
+  config = require("dotenv").config({ path: path.resolve("config/.env") })
+    .parsed;
   pool = new Pool({
     host: config.DBHOST,
     port: config.DBPORT,
