@@ -1,7 +1,7 @@
 const path = require("path");
 const Pool = require("pg").Pool;
 const env = process.env.NODE_ENV || "development";
-const config = {};
+const config = require("dotenv");
 const pool = {};
 if (env === "development") {
   config = require("dotenv").config({ path: path.resolve("config/.env") })
