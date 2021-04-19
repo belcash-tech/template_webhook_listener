@@ -4,7 +4,9 @@ const env = process.env.NODE_ENV || "development";
 var config = require("dotenv");
 var pool = {};
 if (env === "development") {
-  config = require("dotenv").config({ path: path.resolve("config/.env") })
+  config = require("dotenv").config({
+      path: path.resolve("config/.env")
+    })
     .parsed;
   pool = new Pool({
     host: config.DBHOST,
@@ -13,18 +15,25 @@ if (env === "development") {
     password: config.DBPASS,
     database: config.DB,
   });
+  console.log(config)
 } else {
   pool = new Pool({});
 }
 
 var _this = (module.exports = {
   saveReport: async function (
-    log = { request: {}, body: {}, query: {}, summary: {} }
+    log = {
+      request: {},
+      body: {},
+      query: {},
+      summary: {}
+    }
   ) {
     try {
       if (env === "development") {
         let query = `insert into request_log(request_log,request_query, request_body,summary)values('${log.request}','${log.query}','${log.body}', '${log.summary}') returning *;`;
         let result = await pool.query(query);
+        console.log(result.rows)
         return result.rows;
       } else {
         console.log(log);

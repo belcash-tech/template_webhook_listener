@@ -11,6 +11,7 @@
   "author": "Yared Getachew <yared.getachew.tessema@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "cross-env": "^5.2.1",
@@ -28,6 +29,7 @@
     "pg": "^8.2.1",
     "pg-promise": "^10.5.6",
     "request": "^2.88.2",
+    "request-promise": "^4.2.6",
     "request-promise-native": "^1.0.8",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
