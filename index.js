@@ -94,6 +94,17 @@ app.all("/webhook/:entity", (req, res) => {
   Logger.debug(status);
   res.status(200).json({ message: "Received" });
 });
+app.get('/err/400',(req, res)=> {
+
+  res.status(400).json({
+     message: 'Nothing found'
+  });
+});
+app.get('/err/500',(req, res)=>{
+  res.status(500).json({
+    message: 'I am a 500 error'
+  });
+});
 server.listen(PORT, function () {
   Logger.debug(`Server listening on PORT : ${PORT}`);
   console.log(`Server listening on PORT : ${PORT}`);
