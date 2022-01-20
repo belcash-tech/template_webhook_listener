@@ -33,6 +33,13 @@ app.use(express.static(path.resolve("./public/")));
 app.get("/", (req, res) => {
   res.sendFile("index.html");
 });
+app.connect('/connect',(req,res) => {
+  res.status(200).json({
+  
+    "message": "Connected"
+  });
+
+});
 app.all("/", (req, res) => {
   var summary = JSON.stringify({
     params: req.params,
