@@ -1,4 +1,5 @@
 var PORT = process.env.PORT || 5544;
+const BIND_IP="10.105.20.5";
 var path = require("path");
 var express = require("express");
 var bodyParser = require("body-parser");
@@ -112,7 +113,7 @@ app.get('/err/500',(req, res)=>{
     message: 'I am a 500 error'
   });
 });
-server.listen(PORT, function () {
+server.listen(PORT,BIND_IP, function () {
   Logger.debug(`Server listening on PORT : ${PORT}`);
   console.log(`Server listening on PORT : ${PORT}`);
 });
